@@ -6,6 +6,7 @@ public class Dev {
     private String nome;
     private Set<Conteudo> conteudosInscritos = new LinkedHashSet<>();
     private Set<Conteudo> conteudosConcluidos = new LinkedHashSet<>();
+    private Set<Dev> devsQueEleSegue = new LinkedHashSet<>();
 
     public void inscreverBootcamp(Bootcamp bootcamp){
         this.conteudosInscritos.addAll(bootcamp.getConteudos());
@@ -16,6 +17,7 @@ public class Dev {
         Optional<Conteudo> conteudo = this.conteudosInscritos.stream().findFirst();
         if(conteudo.isPresent()) {
             this.conteudosConcluidos.add(conteudo.get());
+            this.emitirCertificado(conteudo.get());
             this.conteudosInscritos.remove(conteudo.get());
         } else {
             System.err.println("Você não está matriculado em nenhum conteúdo!");
@@ -37,6 +39,20 @@ public class Dev {
                 .sum();*/
     }
 
+    public void seguirDev(Dev dev){
+        devsQueEleSegue.add(dev);
+        System.out.println("Você está seguindo" + dev.getNome());
+    }
+
+    private void emitirCertificado(Conteudo conteudo){
+        String nomeConteudo = "a mentoria ";
+        String cargHoraria = "";
+        if (conteudo.getClass().getSimpleName().equalsIgnoreCase("Curso")){
+            nomeConteudo = "o curso ";
+            cargHoraria = " com a carga horária de " + ((Curso) conteudo).getCargaHoraria() + "hs";
+        }
+        System.out.println("Parabéns, você concluiu " + nomeConteudo + conteudo.getTitulo() + cargHoraria + ", continue aprendendo.");
+    }
 
     public String getNome() {
         return nome;
